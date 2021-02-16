@@ -205,6 +205,9 @@ public class ImageRecognitionNister2006<Image extends ImageBase<Image>, TD exten
 	}
 
 	@Override public boolean findBestMatch( Image queryImage, DogArray<Match> matches ) {
+		// Default is no matches
+		matches.resize(0);
+
 		// Detect image features then copy features into an array
 		detector.detect(queryImage);
 		imageFeatures.resize(detector.getNumberOfFeatures());
@@ -218,6 +221,8 @@ public class ImageRecognitionNister2006<Image extends ImageBase<Image>, TD exten
 
 		DogArray<RecognitionVocabularyTreeNister2006.Match> found = databaseN.getMatchScores();
 		matches.resize(found.size);
+
+		if (verbose != null) verbose.println("matches.size="+found.size+" best.error="+found.get(0).error);
 
 		// Copy results into output format
 		int count = config.maxMatches <= 0 ? found.size : Math.min(config.maxMatches, found.size);
